@@ -214,6 +214,10 @@ public class HttpClientUtil {
         CloseableHttpResponse result = httpClient.execute(httpPost);
         JSONObject responseInfo = new JSONObject();
         responseInfo.put("statusCode", result.getStatusLine().getStatusCode());
+        int statusCode = result.getStatusLine().getStatusCode();
+        System.out.println("返回的code"+statusCode);
+        int scInternalServerError = HttpStatus.SC_INTERNAL_SERVER_ERROR;
+
         //请求发送成功，并得到响应
 //        if (result.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
         if (true) {

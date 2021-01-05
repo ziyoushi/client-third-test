@@ -1,12 +1,14 @@
 package com.cc.develop.third.client.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cc.develop.third.client.service.IParkingService;
 import com.cc.develop.third.client.util.HttpClientUtil;
 import com.cc.develop.third.client.util.SignMD5Util;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * com.cc.develop.third.client.controller
@@ -18,6 +20,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/park")
 public class ParkingController {
+
+    @Autowired
+    private IParkingService parkingService;
 
     /**
      * 根据 使用明文加密
@@ -40,6 +45,29 @@ public class ParkingController {
         JSONObject jsonObject = HttpClientUtil.httpPostReturnCodeWithParam(url, parkingSerialNo, sha1String, String.valueOf(timestamp));
 
         return jsonObject.toString();
+    }
+
+    /**
+     * 将导入的文件写入到本地文件中
+     * @param file
+     * @return
+     */
+    @PostMapping("importScanExcelData")
+    public String importScanExcelData(@RequestParam("file") MultipartFile file){
+
+        String data = parkingService.importExcelData(file);
+
+        return data;
+    }
+
+    /**
+     * 查看本地文件中的数据
+     * @return
+     */
+    @GetMapping("/queryLocalFileData")
+    public List<String> queryLocalFileData(){
+        List<String> list = parkingService.getLocalFileData();
+        return list;
     }
 
 }
